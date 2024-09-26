@@ -12,31 +12,36 @@ jobs:
     strategy:
       matrix:
         node-version: [14.x, 16.x, 18.x]
+      fail-fast: false  # Prevent other jobs from being canceled if one fails
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     
     - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
         
     - name: Install dependencies
       run: npm ci
-      
+
     - name: Run Cypress tests
       uses: cypress-io/github-action@v5
       with:
         build: npm run build
         start: npm start
         wait-on: 'http://localhost:3000'
-        
+
     - name: Run unit tests
       run: npm test
 
-    - name: Upload test results
-      uses: actions/upload-artifact@v3
+    - name: Print Cypress logs
       if: failure()
+      run: cat cypress/logs/* || echo "No Cypress logs found"
+
+    - name: Upload Cypress screenshots
+      if: always()
+      uses: actions/upload-artifact@v3
       with:
         name: cypress-screenshots
-        path: cypress/screenshots
+        path: cypress/screenshots || echo "No screenshots found"
