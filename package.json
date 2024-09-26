@@ -4,8 +4,8 @@
   "description": "Cypress plugin for generating test data using Faker",
   "main": "src/index.js",
   "scripts": {
-    "test": "cypress run",
-    "cypress:open": "cypress open"
+    "test": "your-unit-test-command",
+    "test:e2e": "cypress run"
   },
   "keywords": [
     "cypress",
