@@ -4,7 +4,7 @@
   "description": "Cypress plugin for generating test data using Faker",
   "main": "src/index.js",
   "scripts": {
-    "test": "your-unit-test-command",
+    "test": "cypress run",
     "test:e2e": "cypress run"
   },
   "keywords": [
