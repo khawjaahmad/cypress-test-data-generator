@@ -24,8 +24,10 @@ jobs:
     - name: Run Cypress tests
       uses: cypress-io/github-action@v6
       with:
-        start: npm start
-        wait-on: 'http://localhost:3000'
+        # Remove the start and wait-on options if you don't have a server to start
+        # start: npm start
+        # wait-on: 'http://localhost:3000'
+        command: npm run test:e2e  # Adjust this to match your Cypress test command
         
     - name: Run unit tests
       run: npm test
