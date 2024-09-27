@@ -1,0 +1,10 @@
+cypress/
+cypress-documentation/
+node_modules/
+.git/
+.gitignore
+.npmignore
+*.log
+.DS_Store
+.vscode/
+.idea/
