@@ -1,0 +1,13 @@
+# Node modules
+node_modules
+
+# Cypress
+cypress/downloads
+cypress/screenshots
+cypress/videos
+
+# VS Code settings
+.vscode
+
+# macOS system files
+.DS_Store

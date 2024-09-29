@@ -126,14 +126,18 @@ Generates a random category object.
 
 The plugin includes robust error handling for invalid inputs. If provided options are invalid (e.g., invalid age range), the plugin will throw descriptive errors to aid in debugging.
 
-## Examples
+## Example Tests
 
-For more detailed examples, please refer to our [integration tests](./cypress/e2e/plugin-tests.cy.js).
+For detailed usage examples, please refer to our [example tests](https://github.com/khawjaahmad/cypress-test-data-generator/tree/main/cypress/e2e) in the `cypress/e2e` directory. These tests demonstrate various ways to use the data generator:
+
+- `e2e-plugin.cy.js`: Demonstrates basic usage of the plugin
+- `review.cy.js`: Shows how to generate review data
+- `product.cy.js`: Illustrates product data generation
+- `order.cy.js`: Examples of order data generation
+- `user.cy.js`: Demonstrates user data generation
+
+Each file contains multiple test cases that showcase different aspects and options of the data generator. These example tests serve as both verification of the plugin's functionality and as practical examples for users.
 
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
-
-## License
-
-This project is licensed under the MIT License.

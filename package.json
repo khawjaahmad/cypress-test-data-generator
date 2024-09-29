@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "Cypress plugin for generating test data using Faker",
   "main": "src/index.js",
+  "repository": "github:khawjaahmad/cypress-test-data-generator",
+  "bugs": {
+    "url": "https://github.com/khawjaahmad/cypress-test-data-generator/issues"
+  },
   "scripts": {
     "test": "cypress run",
     "test:e2e": "cypress run"
@@ -13,8 +17,8 @@
     "data-generator",
     "faker"
   ],
-  "author": "",
-  "license": "ISC",
+  "author": "Ahmad Waqar",
+  "license": "MIT",
   "dependencies": {
     "@faker-js/faker": "^9.0.3"
   },
