@@ -1,6 +1,6 @@
 {
   "name": "cypress-test-data-generator",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Cypress plugin for generating test data using Faker",
   "main": "src/index.js",
   "repository": "github:khawjaahmad/cypress-test-data-generator",
