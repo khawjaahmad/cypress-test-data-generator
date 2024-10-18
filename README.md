@@ -1,22 +1,23 @@
 # Cypress Test Data Generator Plugin
 
-This plugin provides powerful functionalities to generate random test data for users, products, orders, reviews, categories, companies, medical records, travel itineraries, education, job listings, and vehicles in your Cypress tests. It leverages Faker.js to create realistic and diverse test data, enhancing the robustness of your Cypress test suites.
+Generate realistic and diverse test data for Cypress tests using Faker.js. This plugin enhances your test suites with random data for various entities.
 
 ## Features
 
-- Generate random user data with customizable age ranges and countries
-- Create product data with various attributes like name, price, and stock status
-- Generate complex order data with multiple products
-- Create realistic product reviews with ratings and comments
-- Generate category data for product classification
-- Generate company data with details like industry, revenue, and employees
-- Create medical records with patient information and medical history
-- Generate travel itineraries with flight, hotel, and activity details
-- Generate education data including degrees, institutions, and dates
-- Create job listing data with job titles, descriptions, and requirements
-- Generate vehicle data including make, model, and specifications
-- Supports localization for multi-language testing scenarios
-- Provides consistent data generation with seed support
+- Generate data for:
+  - Users (with customizable age ranges and countries)
+  - Products (including name, price, stock status)
+  - Orders (with multiple products)
+  - Reviews (with ratings and comments)
+  - Categories
+  - Companies (including industry, revenue, employees)
+  - Medical records
+  - Travel itineraries
+  - Education records
+  - Job listings
+  - Vehicles
+- Support for localization
+- Consistent data generation with seed support
 
 ## Installation
 
@@ -287,21 +288,12 @@ The plugin includes robust error handling for invalid inputs. If provided option
 
 ## Example Tests
 
-For detailed usage examples, please refer to our [example tests](https://github.com/khawjaahmad/cypress-test-data-generator/tree/main/cypress/e2e) in the `cypress/e2e` directory. These tests demonstrate various ways to use the data generator:
+For detailed usage examples, refer to our [example tests](https://github.com/khawjaahmad/cypress-test-data-generator/tree/main/cypress/e2e) in the `cypress/e2e` directory. These tests cover:
 
-- `e2e-plugin.cy.js`: Demonstrates basic usage of the plugin
-- `review.cy.js`: Shows how to generate review data
-- `product.cy.js`: Illustrates product data generation
-- `order.cy.js`: Examples of order data generation
-- `user.cy.js`: Demonstrates user data generation
-- `company-generator.cy.js`: Examples of company data generation
-- `medical-record-generator.cy.js`: Demonstrates medical record data generation
-- `travel-itinerary-generator.cy.js`: Shows how to generate travel itinerary data
-- `education-generator.cy.js`: Examples of education data generation
-- `job-listing-generator.cy.js`: Demonstrates job listing data generation
-- `vehicle-generator.cy.js`: Shows how to generate vehicle data
+- Basic plugin usage
+- Data generation for users, products, orders, reviews, companies, medical records, travel itineraries, education, job listings, and vehicles
 
-Each file contains multiple test cases that showcase different aspects and options of the data generator. These example tests serve as both verification of the plugin's functionality and as practical examples for users.
+Each file demonstrates various aspects and options of the data generator, serving as both functional verification and practical examples for users.
 
 ## Contributing
 
