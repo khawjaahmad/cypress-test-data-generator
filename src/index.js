@@ -272,6 +272,223 @@ function dataGenerator(on, config) {
                 ...mainProduct,
                 relatedProducts
             };
+        },
+
+        generateVehicle(options = {}) {
+            const { seed, locale } = options || {};
+            
+            if (seed !== undefined) {
+                faker.seed(Number(seed));
+            }
+
+            if (locale) {
+                try {
+                    faker.locale = locale;
+                } catch (error) {
+                    console.warn(`Unsupported locale: ${locale}. Falling back to default.`);
+                }
+            }
+
+            return {
+                id: faker.string.uuid(),
+                make: faker.vehicle.manufacturer(),
+                model: faker.vehicle.model(),
+                type: faker.vehicle.type(),
+                color: faker.vehicle.color(),
+                fuelType: faker.vehicle.fuel(),
+                year: faker.date.past({ years: 20 }).getFullYear(),
+                mileage: faker.number.int({ min: 0, max: 200000 }),
+                price: faker.number.int({ min: 1000, max: 100000 }),
+                vin: faker.vehicle.vin(),
+                licensePlate: faker.vehicle.vrm() // Adding license plate
+            };
+        },
+
+        generateJobListing(options = {}) {
+            const { seed, locale } = options || {};
+            
+            if (seed !== undefined) {
+                faker.seed(Number(seed));
+            }
+
+            if (locale) {
+                try {
+                    faker.locale = locale;
+                } catch (error) {
+                    console.warn(`Unsupported locale: ${locale}. Falling back to default.`);
+                }
+            }
+
+            const postedDate = new Date(faker.date.recent({ days: 30 }));
+            const applicationDeadline = new Date(faker.date.soon({ days: 30, refDate: postedDate }));
+
+            return {
+                id: faker.string.uuid(),
+                title: faker.person.jobTitle(),
+                company: faker.company.name(),
+                location: faker.location.city(),
+                description: faker.lorem.paragraphs(2),
+                requirements: [
+                    faker.lorem.sentence(),
+                    faker.lorem.sentence(),
+                    faker.lorem.sentence()
+                ],
+                salary: {
+                    min: faker.number.int({ min: 30000, max: 80000 }),
+                    max: faker.number.int({ min: 80001, max: 200000 })
+                },
+                employmentType: faker.helpers.arrayElement(['Full-time', 'Part-time', 'Contract', 'Temporary']),
+                postedDate: postedDate.toISOString().split('.')[0] + 'Z',
+                applicationDeadline: applicationDeadline.toISOString().split('.')[0] + 'Z'
+            };
+        },
+
+        generateEducation(options = {}) {
+            const { seed, locale } = options || {};
+            
+            if (seed !== undefined) {
+                faker.seed(Number(seed));
+            }
+
+            if (locale) {
+                try {
+                    faker.locale = locale;
+                } catch (error) {
+                    console.warn(`Unsupported locale: ${locale}. Falling back to default.`);
+                }
+            }
+
+            const startDate = new Date(faker.date.past({ years: 6 }));
+            const endDate = new Date(faker.date.between({ from: startDate, to: new Date() }));
+
+            return {
+                id: faker.string.uuid(),
+                degree: faker.helpers.arrayElement(['Bachelor', 'Master', 'PhD', 'Associate']),
+                fieldOfStudy: faker.person.jobArea(),
+                university: faker.company.name(),
+                graduationYear: endDate.getFullYear(),
+                gpa: Number(faker.number.float({ min: 2.0, max: 4.0, precision: 0.1 }).toFixed(1)),
+                honors: faker.helpers.maybe(() => faker.lorem.words(2)) || null,
+                activities: [
+                    faker.lorem.words(3),
+                    faker.lorem.words(3)
+                ],
+                startDate: startDate.toISOString().split('T')[0],
+                endDate: endDate.toISOString().split('T')[0]
+            };
+        },
+
+        generateCompany(options = {}) {
+            const { seed, locale } = options || {};
+            
+            if (seed !== undefined) {
+                faker.seed(Number(seed));
+            }
+
+            if (locale) {
+                try {
+                    faker.locale = locale;
+                } catch (error) {
+                    console.warn(`Unsupported locale: ${locale}. Falling back to default.`);
+                }
+            }
+
+            return {
+                id: faker.string.uuid(),
+                name: faker.company.name(),
+                industry: faker.company.buzzNoun(),
+                foundedYear: faker.date.past({ years: 100 }).getFullYear(),
+                employees: faker.number.int({ min: 1, max: 100000 }),
+                revenue: faker.finance.amount({ min: 10000, max: 1000000000, dec: 0 }),
+                headquarters: faker.location.city(),
+                ceo: faker.person.fullName(),
+                description: faker.company.catchPhrase(),
+                stockSymbol: faker.finance.currencyCode(),
+                website: faker.internet.url()
+            };
+        },
+
+        generateMedicalRecord(options = {}) {
+            const { seed, locale } = options || {};
+            
+            if (seed !== undefined) {
+                faker.seed(Number(seed));
+            }
+
+            if (locale) {
+                try {
+                    faker.locale = locale;
+                } catch (error) {
+                    console.warn(`Unsupported locale: ${locale}. Falling back to default.`);
+                }
+            }
+
+            return {
+                patientId: faker.string.uuid(),
+                name: faker.person.fullName(),
+                dateOfBirth: faker.date.birthdate().toISOString().split('T')[0],
+                gender: faker.person.sex(),
+                bloodType: faker.helpers.arrayElement(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']),
+                height: faker.number.int({ min: 150, max: 200 }),
+                weight: faker.number.int({ min: 40, max: 150 }),
+                allergies: [faker.science.chemicalElement(), faker.science.chemicalElement()],
+                medications: [faker.commerce.productName(), faker.commerce.productName()],
+                diagnoses: [faker.lorem.words(3), faker.lorem.words(3)],
+                treatmentHistory: faker.lorem.paragraph(),
+                upcomingAppointments: faker.date.future().toISOString().split('T')[0],
+                primaryCarePhysician: faker.person.fullName()
+            };
+        },
+
+        generateTravelItinerary(options = {}) {
+            const { seed, locale } = options || {};
+            
+            if (seed !== undefined) {
+                faker.seed(Number(seed));
+            }
+
+            if (locale) {
+                try {
+                    faker.locale = locale;
+                } catch (error) {
+                    console.warn(`Unsupported locale: ${locale}. Falling back to default.`);
+                }
+            }
+
+            const departureDate = faker.date.future();
+            const returnDate = new Date(departureDate.getTime() + faker.number.int({ min: 3, max: 14 }) * 24 * 60 * 60 * 1000);
+
+            return {
+                travelerName: faker.person.fullName(),
+                destination: faker.location.country(),
+                departureDate: departureDate.toISOString().split('T')[0],
+                returnDate: returnDate.toISOString().split('T')[0],
+                flightDetails: {
+                    airline: faker.airline.airline().name,
+                    flightNumber: faker.airline.flightNumber({ length: 6 }),
+                    departureTime: faker.date.soon({ refDate: departureDate, days: 1 }).toISOString().split('.')[0] + 'Z',
+                    arrivalTime: faker.date.soon({ refDate: departureDate, days: 1 }).toISOString().split('.')[0] + 'Z'
+                },
+                hotelReservation: {
+                    hotelName: faker.company.name() + ' Hotel',
+                    checkIn: departureDate.toISOString().split('T')[0],
+                    checkOut: returnDate.toISOString().split('T')[0]
+                },
+                carRental: {
+                    company: faker.company.name(),
+                    carModel: faker.vehicle.model()
+                },
+                plannedActivities: [faker.lorem.sentence(), faker.lorem.sentence()],
+                travelInsurance: {
+                    provider: faker.company.name(),
+                    policyNumber: faker.finance.accountNumber()
+                },
+                passportNumber: faker.string.alphanumeric(9).toUpperCase(),
+                emergencyContact: {
+                    name: faker.person.fullName(),
+                    phone: faker.phone.number()
+                }
+            };
         }
     };
 

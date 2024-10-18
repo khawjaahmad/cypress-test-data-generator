@@ -40,6 +40,24 @@ module.exports = defineConfig({
         generateProductWithRelations(options) {
           return generator.generateProductWithRelations(options);
         },
+        generateVehicle(options) {
+          return generator.generateVehicle(options);
+        },
+        generateJobListing(options) {
+          return generator.generateJobListing(options);
+        },
+        generateEducation(options) {
+          return generator.generateEducation(options);
+        },
+        generateCompany(options) {
+          return generator.generateCompany(options);
+        },
+        generateMedicalRecord(options) {
+          return generator.generateMedicalRecord(options);
+        },
+        generateTravelItinerary(options) {
+          return generator.generateTravelItinerary(options);
+        },
       });
     },
   },

@@ -1,6 +1,6 @@
 # Cypress Test Data Generator Plugin
 
-This plugin provides powerful functionalities to generate random test data for users, products, orders, reviews, and categories in your Cypress tests. It leverages Faker.js to create realistic and diverse test data, enhancing the robustness of your Cypress test suites.
+This plugin provides powerful functionalities to generate random test data for users, products, orders, reviews, categories, companies, medical records, travel itineraries, education, job listings, and vehicles in your Cypress tests. It leverages Faker.js to create realistic and diverse test data, enhancing the robustness of your Cypress test suites.
 
 ## Features
 
@@ -9,6 +9,12 @@ This plugin provides powerful functionalities to generate random test data for u
 - Generate complex order data with multiple products
 - Create realistic product reviews with ratings and comments
 - Generate category data for product classification
+- Generate company data with details like industry, revenue, and employees
+- Create medical records with patient information and medical history
+- Generate travel itineraries with flight, hotel, and activity details
+- Generate education data including degrees, institutions, and dates
+- Create job listing data with job titles, descriptions, and requirements
+- Generate vehicle data including make, model, and specifications
 - Supports localization for multi-language testing scenarios
 - Provides consistent data generation with seed support
 
@@ -74,6 +80,54 @@ cy.task('generateCategory').then((category) => {
 });
 ```
 
+### Generating a Company
+
+```javascript
+cy.task('generateCompany').then((company) => {
+  cy.log(`Generated Company: ${JSON.stringify(company)}`);
+});
+```
+
+### Generating a Medical Record
+
+```javascript
+cy.task('generateMedicalRecord').then((record) => {
+  cy.log(`Generated Medical Record: ${JSON.stringify(record)}`);
+});
+```
+
+### Generating a Travel Itinerary
+
+```javascript
+cy.task('generateTravelItinerary').then((itinerary) => {
+  cy.log(`Generated Travel Itinerary: ${JSON.stringify(itinerary)}`);
+});
+```
+
+### Generating Education Data
+
+```javascript
+cy.task('generateEducation').then((education) => {
+  cy.log(`Generated Education: ${JSON.stringify(education)}`);
+});
+```
+
+### Generating a Job Listing
+
+```javascript
+cy.task('generateJobListing').then((jobListing) => {
+  cy.log(`Generated Job Listing: ${JSON.stringify(jobListing)}`);
+});
+```
+
+### Generating Vehicle Data
+
+```javascript
+cy.task('generateVehicle').then((vehicle) => {
+  cy.log(`Generated Vehicle: ${JSON.stringify(vehicle)}`);
+});
+```
+
 ## API
 
 ### `generateUser(options)`
@@ -81,10 +135,12 @@ cy.task('generateCategory').then((category) => {
 Generates a random user object.
 
 - **Options:**
-  - `ageRange`: An object specifying the minimum and maximum age (default: `{ min: 18, max: 99 }`)
-  - `country`: Country (default: random)
   - `seed`: Number to seed the random generator for consistent results
   - `locale`: Locale for localized data generation
+  - `ageRange`: An object specifying the minimum and maximum age (default: `{ min: 18, max: 99 }`)
+  - `country`: Specific country for the user's address (default: random)
+  - `ageMin`: Minimum age (default: 18)
+  - `ageMax`: Maximum age (default: 99)
 
 ### `generateProduct(options)`
 
@@ -94,31 +150,134 @@ Generates a random product object.
   - `seed`: Number to seed the random generator
   - `locale`: Locale for localized data generation
   - `customFields`: Object with additional fields to include
+  - `relatedProducts`: Array of related product objects
 
 ### `generateOrder(options)`
 
 Generates a random order object.
 
 - **Options:**
-  - `productCount`: Number of products in the order (default: `3`)
   - `seed`: Number to seed the random generator
   - `locale`: Locale for localized data generation
+  - `productCount`: Number of products in the order (default: 3)
 
 ### `generateReview(options)`
 
 Generates a random review object.
 
 - **Options:**
-  - `productId`: Specific product ID for the review
   - `seed`: Number to seed the random generator
   - `locale`: Locale for localized data generation
+  - `productId`: Specific product ID for the review
 
 ### `generateCategory(options)`
 
 Generates a random category object.
 
 - **Options:**
-  - `parentId`: ID of the parent category for generating subcategories
+  - `seed`: Number to seed the random generator
+  - `locale`: Locale for localized data generation
+  - `parentId`: ID of the parent category (default: null)
+
+### `generateInventory(productId, options)`
+
+Generates a random inventory object for a product.
+
+- **Parameters:**
+  - `productId`: ID of the product
+- **Options:**
+  - `seed`: Number to seed the random generator
+  - `locale`: Locale for localized data generation
+
+### `generateCoupon(options)`
+
+Generates a random coupon object.
+
+- **Options:**
+  - `seed`: Number to seed the random generator
+  - `locale`: Locale for localized data generation
+
+### `generateShippingMethod(options)`
+
+Generates a random shipping method object.
+
+- **Options:**
+  - `seed`: Number to seed the random generator
+  - `locale`: Locale for localized data generation
+
+### `generatePaymentMethod(options)`
+
+Generates a random payment method object.
+
+- **Options:**
+  - `seed`: Number to seed the random generator
+  - `locale`: Locale for localized data generation
+
+### `generateRelatedProducts(mainProductId, count, options)`
+
+Generates an array of related product objects.
+
+- **Parameters:**
+  - `mainProductId`: ID of the main product
+  - `count`: Number of related products to generate (default: 3)
+- **Options:**
+  - `seed`: Number to seed the random generator
+  - `locale`: Locale for localized data generation
+
+### `generateProductWithRelations(options)`
+
+Generates a product object with related products.
+
+- **Options:**
+  - `seed`: Number to seed the random generator
+  - `locale`: Locale for localized data generation
+  - `relatedProductCount`: Number of related products to generate (default: 3)
+
+### `generateJobListing(options)`
+
+Generates a random job listing object.
+
+- **Options:**
+  - `seed`: Number to seed the random generator
+  - `locale`: Locale for localized data generation
+
+### `generateEducation(options)`
+
+Generates a random education object.
+
+- **Options:**
+  - `seed`: Number to seed the random generator
+  - `locale`: Locale for localized data generation
+
+### `generateCompany(options)`
+
+Generates a random company object.
+
+- **Options:**
+  - `seed`: Number to seed the random generator
+  - `locale`: Locale for localized data generation
+
+### `generateMedicalRecord(options)`
+
+Generates a random medical record object.
+
+- **Options:**
+  - `seed`: Number to seed the random generator
+  - `locale`: Locale for localized data generation
+
+### `generateTravelItinerary(options)`
+
+Generates a random travel itinerary object.
+
+- **Options:**
+  - `seed`: Number to seed the random generator
+  - `locale`: Locale for localized data generation
+
+### `generateVehicle(options)`
+
+Generates a random vehicle object.
+
+- **Options:**
   - `seed`: Number to seed the random generator
   - `locale`: Locale for localized data generation
 
@@ -135,6 +294,12 @@ For detailed usage examples, please refer to our [example tests](https://github.
 - `product.cy.js`: Illustrates product data generation
 - `order.cy.js`: Examples of order data generation
 - `user.cy.js`: Demonstrates user data generation
+- `company-generator.cy.js`: Examples of company data generation
+- `medical-record-generator.cy.js`: Demonstrates medical record data generation
+- `travel-itinerary-generator.cy.js`: Shows how to generate travel itinerary data
+- `education-generator.cy.js`: Examples of education data generation
+- `job-listing-generator.cy.js`: Demonstrates job listing data generation
+- `vehicle-generator.cy.js`: Shows how to generate vehicle data
 
 Each file contains multiple test cases that showcase different aspects and options of the data generator. These example tests serve as both verification of the plugin's functionality and as practical examples for users.
 

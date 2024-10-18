@@ -130,4 +130,175 @@ describe('Data Generator Plugin', () => {
       expect(product1).to.deep.equal(product2);
     });
   });
+
+  describe('Vehicle Data Generation', () => {
+    it('generates vehicle data with correct properties', () => {
+      cy.task('generateVehicle').then((vehicle) => {
+        expect(vehicle).to.have.all.keys('id', 'make', 'model', 'type', 'color', 'fuelType', 'year', 'mileage', 'price', 'vin', 'licensePlate');
+        expect(vehicle.id).to.be.a('string');
+        expect(vehicle.make).to.be.a('string');
+        expect(vehicle.model).to.be.a('string');
+        expect(vehicle.type).to.be.a('string');
+        expect(vehicle.color).to.be.a('string');
+        expect(vehicle.fuelType).to.be.a('string');
+        expect(vehicle.year).to.be.a('number');
+        expect(vehicle.mileage).to.be.a('number');
+        expect(vehicle.price).to.be.a('number');
+        expect(vehicle.vin).to.be.a('string');
+        expect(vehicle.licensePlate).to.be.a('string');
+      });
+    });
+
+    it('generates vehicle data with a specific locale', () => {
+      cy.task('generateVehicle', { locale: 'de' }).then((vehicle) => {
+        expect(vehicle.make).to.be.a('string');
+      });
+    });
+
+    it('generates consistent vehicle data with the same seed', () => {
+      const seed = 12345;
+      cy.task('generateVehicle', { seed }).then((vehicle1) => {
+        cy.task('generateVehicle', { seed }).then((vehicle2) => {
+          expect(vehicle1).to.deep.equal(vehicle2);
+        });
+      });
+    });
+  });
+
+  describe('Education Data Generation', () => {
+    it('generates education data with correct properties', () => {
+      cy.task('generateEducation').then((education) => {
+        expect(education).to.have.all.keys('id', 'degree', 'fieldOfStudy', 'university', 'graduationYear', 'gpa', 'honors', 'activities', 'startDate', 'endDate');
+        expect(education.id).to.be.a('string');
+        expect(education.degree).to.be.a('string');
+        expect(education.fieldOfStudy).to.be.a('string');
+        expect(education.university).to.be.a('string');
+        expect(education.graduationYear).to.be.a('number');
+        expect(education.gpa).to.be.a('number');
+        expect(education.honors).to.satisfy((value) => value === null || typeof value === 'string');
+        expect(education.activities).to.be.an('array');
+        expect(education.startDate).to.be.a('string');
+        expect(education.endDate).to.be.a('string');
+      });
+    });
+
+    it('generates education data with a specific locale', () => {
+      cy.task('generateEducation', { locale: 'de' }).then((education) => {
+        expect(education.university).to.be.a('string');
+      });
+    });
+
+    it('generates consistent education data with the same seed', () => {
+      const seed = 12345;
+      cy.task('generateEducation', { seed }).then((education1) => {
+        cy.task('generateEducation', { seed }).then((education2) => {
+          expect(education1).to.deep.equal(education2);
+        });
+      });
+    });
+  });
+
+  describe('Company Data Generation', () => {
+    it('generates company data with correct properties', () => {
+      cy.task('generateCompany').then((company) => {
+        expect(company).to.have.all.keys('id', 'name', 'industry', 'foundedYear', 'employees', 'revenue', 'headquarters', 'ceo', 'description', 'stockSymbol', 'website');
+        expect(company.id).to.be.a('string');
+        expect(company.name).to.be.a('string');
+        expect(company.industry).to.be.a('string');
+        expect(company.foundedYear).to.be.a('number');
+        expect(company.employees).to.be.a('number');
+        expect(company.revenue).to.be.a('string');
+        expect(company.headquarters).to.be.a('string');
+        expect(company.ceo).to.be.a('string');
+        expect(company.description).to.be.a('string');
+        expect(company.stockSymbol).to.be.a('string');
+        expect(company.website).to.be.a('string');
+      });
+    });
+
+    it('generates company data with a specific locale', () => {
+      cy.task('generateCompany', { locale: 'de' }).then((company) => {
+        expect(company.name).to.be.a('string');
+      });
+    });
+
+    it('generates consistent company data with the same seed', () => {
+      const seed = 12345;
+      cy.task('generateCompany', { seed }).then((company1) => {
+        cy.task('generateCompany', { seed }).then((company2) => {
+          expect(company1).to.deep.equal(company2);
+        });
+      });
+    });
+  });
+
+  describe('Medical Record Data Generation', () => {
+    it('generates medical record data with correct properties', () => {
+      cy.task('generateMedicalRecord').then((record) => {
+        expect(record).to.have.all.keys('patientId', 'name', 'dateOfBirth', 'gender', 'bloodType', 'height', 'weight', 'allergies', 'medications', 'diagnoses', 'treatmentHistory', 'upcomingAppointments', 'primaryCarePhysician');
+        expect(record.patientId).to.be.a('string');
+        expect(record.name).to.be.a('string');
+        expect(record.dateOfBirth).to.be.a('string');
+        expect(record.gender).to.be.a('string');
+        expect(record.bloodType).to.be.a('string');
+        expect(record.height).to.be.a('number');
+        expect(record.weight).to.be.a('number');
+        expect(record.allergies).to.be.an('array');
+        expect(record.medications).to.be.an('array');
+        expect(record.diagnoses).to.be.an('array');
+        expect(record.treatmentHistory).to.be.a('string');
+        expect(record.upcomingAppointments).to.be.a('string');
+        expect(record.primaryCarePhysician).to.be.a('string');
+      });
+    });
+
+    it('generates medical record data with a specific locale', () => {
+      cy.task('generateMedicalRecord', { locale: 'de' }).then((record) => {
+        expect(record.name).to.be.a('string');
+      });
+    });
+
+    it('generates consistent medical record data with the same seed', () => {
+      const seed = 12345;
+      cy.task('generateMedicalRecord', { seed }).then((record1) => {
+        cy.task('generateMedicalRecord', { seed }).then((record2) => {
+          expect(record1).to.deep.equal(record2);
+        });
+      });
+    });
+  });
+
+  describe('Travel Itinerary Data Generation', () => {
+    it('generates travel itinerary data with correct properties', () => {
+      cy.task('generateTravelItinerary').then((itinerary) => {
+        expect(itinerary).to.have.all.keys('travelerName', 'destination', 'departureDate', 'returnDate', 'flightDetails', 'hotelReservation', 'carRental', 'plannedActivities', 'travelInsurance', 'passportNumber', 'emergencyContact');
+        expect(itinerary.travelerName).to.be.a('string');
+        expect(itinerary.destination).to.be.a('string');
+        expect(itinerary.departureDate).to.be.a('string');
+        expect(itinerary.returnDate).to.be.a('string');
+        expect(itinerary.flightDetails).to.be.an('object');
+        expect(itinerary.hotelReservation).to.be.an('object');
+        expect(itinerary.carRental).to.be.an('object');
+        expect(itinerary.plannedActivities).to.be.an('array');
+        expect(itinerary.travelInsurance).to.be.an('object');
+        expect(itinerary.passportNumber).to.be.a('string');
+        expect(itinerary.emergencyContact).to.be.an('object');
+      });
+    });
+
+    it('generates travel itinerary data with a specific locale', () => {
+      cy.task('generateTravelItinerary', { locale: 'de' }).then((itinerary) => {
+        expect(itinerary.destination).to.be.a('string');
+      });
+    });
+
+    it('generates consistent travel itinerary data with the same seed', () => {
+      const seed = 12345;
+      cy.task('generateTravelItinerary', { seed }).then((itinerary1) => {
+        cy.task('generateTravelItinerary', { seed }).then((itinerary2) => {
+          expect(itinerary1).to.deep.equal(itinerary2);
+        });
+      });
+    });
+  });
 });
