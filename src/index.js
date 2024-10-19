@@ -196,7 +196,7 @@ function dataGenerator(on, config) {
             if (locale) setLocale(locale);
 
             return applyPlugins({
-                productId: faker.string.uuid(),
+                productId,
                 quantity: faker.number.int({ min: 0, max: 1000 }),
                 lastUpdated: faker.date.recent(),
                 warehouseLocation: faker.location.city(),
