@@ -1,14 +1,47 @@
+<div align="center">
+
 # Cypress Test Data Generator
 
-Generate realistic test data for Cypress tests using Faker.js. This plugin provides 40+ generators covering users, e-commerce, social, business, finance, and more.
+**Generate realistic, reproducible test data for Cypress tests**
 
-## Features
+[![npm version](https://img.shields.io/npm/v/cypress-test-data-generator.svg?style=flat-square)](https://www.npmjs.com/package/cypress-test-data-generator)
+[![npm downloads](https://img.shields.io/npm/dm/cypress-test-data-generator.svg?style=flat-square)](https://www.npmjs.com/package/cypress-test-data-generator)
+[![license](https://img.shields.io/npm/l/cypress-test-data-generator.svg?style=flat-square)](https://github.com/khawjaahmad/cypress-test-data-generator/blob/main/LICENSE)
 
-- **40+ Data Generators** across multiple domains
-- **Seed Support** for reproducible test data
-- **Locale Support** for internationalization
-- **Modular Architecture** with domain-specific generators
-- **TypeScript-friendly** with consistent APIs
+[Installation](#installation) •
+[Quick Start](#quick-start) •
+[Generators](#available-generators) •
+[Examples](#usage-examples) •
+[API](#common-options) •
+[Contributing](#contributing)
+
+</div>
+
+---
+
+## Why This Plugin?
+
+Writing realistic test data by hand is tedious and error-prone. This plugin provides **40+ data generators** powered by [Faker.js](https://fakerjs.dev/) that create consistent, realistic data for your Cypress tests.
+
+```javascript
+// Before: Manual test data
+const user = { name: 'Test User', email: 'test@test.com', age: 25 };
+
+// After: Rich, realistic data
+cy.task('generateUser').then((user) => {
+  // { id, firstName, lastName, email, phone, avatar, dateOfBirth, address, preferences, ... }
+});
+```
+
+### Key Features
+
+- **40+ Generators** — Users, products, orders, invoices, social profiles, and more
+- **Reproducible Data** — Seed support for consistent test runs
+- **Internationalization** — 50+ locales for localized data
+- **Zero Config** — Works out of the box with sensible defaults
+- **Fully Typed** — Consistent API across all generators
+
+---
 
 ## Installation
 
@@ -33,39 +66,56 @@ module.exports = defineConfig({
 });
 ```
 
+---
+
 ## Quick Start
 
 ```javascript
-// Generate a user
+// Generate a single user
 cy.task('generateUser').then((user) => {
-  // { id, firstName, lastName, email, phone, avatar, dateOfBirth, gender, address, preferences }
+  cy.visit('/register');
+  cy.get('#email').type(user.email);
+  cy.get('#name').type(`${user.firstName} ${user.lastName}`);
 });
 
 // Generate with options
 cy.task('generateUser', {
-  seed: 12345,           // Reproducible data
-  locale: 'de',          // German locale
-  ageMin: 25,
-  ageMax: 35
+  seed: 12345,    // Same seed = same data
+  locale: 'de'    // German names/addresses
+});
+
+// Generate related data
+cy.task('generateProduct').then((product) => {
+  cy.task('generateReview', { productId: product.id }).then((review) => {
+    // Test product with its review
+  });
 });
 ```
 
+---
+
 ## Available Generators
 
-### User & Profile
+<details>
+<summary><strong>User & Profile</strong></summary>
+
 | Generator | Description |
 |-----------|-------------|
-| `generateUser` | User with profile, address, preferences |
+| `generateUser` | Complete user profile with address and preferences |
 | `generateAddress` | Standalone address with coordinates |
 
-### E-commerce
+</details>
+
+<details>
+<summary><strong>E-commerce</strong></summary>
+
 | Generator | Description |
 |-----------|-------------|
-| `generateProduct` | Product with SKU, pricing, stock |
+| `generateProduct` | Product with SKU, pricing, stock status |
 | `generateProductWithRelations` | Product with related products |
-| `generateOrder` | Order with products, shipping |
+| `generateOrder` | Order with products and shipping |
 | `generateReview` | Product review with rating |
-| `generateCategory` | Product category with hierarchy |
+| `generateCategory` | Category with hierarchy support |
 | `generateCart` | Shopping cart with items |
 | `generateWishlist` | User wishlist |
 | `generateReturn` | Return/refund request |
@@ -74,203 +124,291 @@ cy.task('generateUser', {
 | `generateShippingMethod` | Shipping option |
 | `generatePaymentMethod` | Payment method |
 
-### Social & Communication
+</details>
+
+<details>
+<summary><strong>Social & Communication</strong></summary>
+
 | Generator | Description |
 |-----------|-------------|
-| `generateSocialProfile` | Social media profile |
-| `generateComment` | Comment with replies |
+| `generateSocialProfile` | Social media profile (Twitter, Instagram, etc.) |
+| `generateComment` | Comment with replies support |
 | `generateNotification` | App notification |
 | `generateMessage` | Chat/direct message |
 
-### Business & Enterprise
+</details>
+
+<details>
+<summary><strong>Business & Enterprise</strong></summary>
+
 | Generator | Description |
 |-----------|-------------|
-| `generateCompany` | Company with industry, revenue |
+| `generateCompany` | Company with industry and revenue |
 | `generateInvoice` | Invoice with line items |
-| `generateEmployee` | Employee with department, salary |
-| `generateProject` | Project with team, milestones |
+| `generateEmployee` | Employee with department and salary |
+| `generateProject` | Project with team and milestones |
 | `generateTicket` | Support ticket |
 | `generateMeeting` | Meeting with attendees |
 | `generateJobListing` | Job posting |
 
-### Finance
+</details>
+
+<details>
+<summary><strong>Finance</strong></summary>
+
 | Generator | Description |
 |-----------|-------------|
 | `generateBankAccount` | Bank account with balance |
-| `generateLoan` | Loan with terms |
+| `generateLoan` | Loan with terms and payments |
 | `generateInsurancePolicy` | Insurance policy |
 | `generateCreditCard` | Credit card details |
 | `generateTransaction` | Financial transaction |
 | `generateSubscription` | Subscription plan |
 
-### Content & Media
-| Generator | Description |
-|-----------|-------------|
-| `generateBlogPost` | Blog post with SEO |
-| `generateEvent` | Event with tickets, speakers |
+</details>
 
-### Travel & Automotive
-| Generator | Description |
-|-----------|-------------|
-| `generateTravelItinerary` | Travel plan with flights, hotels |
-| `generateVehicle` | Vehicle with specs |
+<details>
+<summary><strong>Content & Media</strong></summary>
 
-### Real Estate
 | Generator | Description |
 |-----------|-------------|
-| `generateProperty` | Property listing |
+| `generateBlogPost` | Blog post with SEO metadata |
+| `generateEvent` | Event with tickets and speakers |
 
-### Food & Restaurant
+</details>
+
+<details>
+<summary><strong>Travel & Automotive</strong></summary>
+
 | Generator | Description |
 |-----------|-------------|
-| `generateRestaurant` | Restaurant with hours, features |
-| `generateMenuItem` | Menu item with nutrition |
+| `generateTravelItinerary` | Travel plan with flights and hotels |
+| `generateVehicle` | Vehicle with specifications |
+
+</details>
+
+<details>
+<summary><strong>Real Estate</strong></summary>
+
+| Generator | Description |
+|-----------|-------------|
+| `generateProperty` | Property listing with agent info |
+
+</details>
+
+<details>
+<summary><strong>Food & Restaurant</strong></summary>
+
+| Generator | Description |
+|-----------|-------------|
+| `generateRestaurant` | Restaurant with hours and features |
+| `generateMenuItem` | Menu item with nutrition info |
 | `generateFoodOrder` | Food delivery order |
 
-### Technical & API
+</details>
+
+<details>
+<summary><strong>Technical & API</strong></summary>
+
 | Generator | Description |
 |-----------|-------------|
 | `generateApiResponse` | API response with pagination |
 | `generateLogEntry` | Application log entry |
 
-### Healthcare & Education
+</details>
+
+<details>
+<summary><strong>Healthcare & Education</strong></summary>
+
 | Generator | Description |
 |-----------|-------------|
 | `generateMedicalRecord` | Medical record |
 | `generateEducation` | Education record |
 
+</details>
+
+---
+
 ## Usage Examples
 
-### E-commerce Flow
+### E-commerce Testing
+
 ```javascript
-// Create product catalog
-cy.task('generateProduct').then((product) => {
-  cy.task('generateReview', { productId: product.id }).then((review) => {
-    // Test product with review
+describe('Shopping Flow', () => {
+  it('completes checkout with generated data', () => {
+    cy.task('generateProduct').then((product) => {
+      cy.task('generateCart', { itemCount: 3 }).then((cart) => {
+        cy.task('generateUser').then((user) => {
+          // Use generated data in your test
+          expect(cart.items).to.have.length(3);
+          expect(cart.total).to.be.greaterThan(0);
+        });
+      });
+    });
+  });
+
+  it('displays order history', () => {
+    cy.task('generateOrder', { productCount: 5 }).then((order) => {
+      expect(order.products).to.have.length(5);
+      expect(order.totalAmount).to.equal(
+        order.products.reduce((sum, p) => sum + p.price, 0)
+      );
+    });
+  });
+});
+```
+
+### Business Application Testing
+
+```javascript
+describe('Invoice Management', () => {
+  it('creates invoice with line items', () => {
+    cy.task('generateInvoice', { itemCount: 5 }).then((invoice) => {
+      expect(invoice.invoiceNumber).to.match(/^INV-\d{6}$/);
+      expect(invoice.items).to.have.length(5);
+      expect(invoice.total).to.be.greaterThan(invoice.subtotal); // Includes tax
+    });
   });
 });
 
-// Generate order with multiple products
-cy.task('generateOrder', { productCount: 5 }).then((order) => {
-  expect(order.products).to.have.length(5);
-  expect(order.totalAmount).to.be.a('number');
-});
-
-// Shopping cart
-cy.task('generateCart', { itemCount: 3 }).then((cart) => {
-  expect(cart.items).to.have.length(3);
-  expect(cart.total).to.equal(cart.subtotal + cart.tax - cart.discount);
+describe('Employee Directory', () => {
+  it('filters by department', () => {
+    cy.task('generateEmployee', { department: 'Engineering' }).then((emp) => {
+      expect(emp.department).to.equal('Engineering');
+      expect(emp.employeeId).to.match(/^EMP-\d{6}$/);
+    });
+  });
 });
 ```
 
-### Business Operations
+### Social Features Testing
+
 ```javascript
-// Generate invoice
-cy.task('generateInvoice', { itemCount: 5 }).then((invoice) => {
-  expect(invoice.invoiceNumber).to.match(/^INV-\d{6}$/);
-  expect(invoice.status).to.be.oneOf(['draft', 'sent', 'paid', 'overdue']);
-});
+describe('Social Feed', () => {
+  it('displays user notifications', () => {
+    cy.task('generateNotification', { type: 'payment' }).then((notif) => {
+      expect(notif.type).to.equal('payment');
+      expect(notif.priority).to.be.oneOf(['low', 'medium', 'high', 'urgent']);
+    });
+  });
 
-// Generate employee
-cy.task('generateEmployee', { department: 'Engineering' }).then((employee) => {
-  expect(employee.department).to.equal('Engineering');
-  expect(employee.employeeId).to.match(/^EMP-\d{6}$/);
+  it('shows social profile', () => {
+    cy.task('generateSocialProfile', { platform: 'instagram' }).then((profile) => {
+      expect(profile.platform).to.equal('instagram');
+      expect(profile.followers).to.be.a('number');
+      expect(profile.isVerified).to.be.a('boolean');
+    });
+  });
 });
 ```
 
-### Social Features
-```javascript
-// Social profile for specific platform
-cy.task('generateSocialProfile', { platform: 'instagram' }).then((profile) => {
-  expect(profile.platform).to.equal('instagram');
-  expect(profile.followers).to.be.a('number');
-});
-
-// Generate notification
-cy.task('generateNotification', { type: 'payment' }).then((notification) => {
-  expect(notification.type).to.equal('payment');
-  expect(notification.priority).to.be.oneOf(['low', 'medium', 'high', 'urgent']);
-});
-```
-
-### Financial Data
-```javascript
-// Bank account
-cy.task('generateBankAccount').then((account) => {
-  expect(account.accountType).to.be.oneOf(['checking', 'savings', 'money_market']);
-  expect(account.balance).to.be.a('number');
-});
-
-// Loan
-cy.task('generateLoan', { type: 'mortgage' }).then((loan) => {
-  expect(loan.type).to.equal('mortgage');
-  expect(loan.loanNumber).to.match(/^LN-\d{10}$/);
-});
-```
+---
 
 ## Common Options
 
-All generators support these options:
+All generators accept these common options:
 
 | Option | Type | Description |
 |--------|------|-------------|
-| `seed` | `number` | Seed for reproducible data |
-| `locale` | `string` | Locale code (e.g., 'en', 'de', 'fr') |
+| `seed` | `number` | Seed for reproducible data generation |
+| `locale` | `string` | Locale code (`en`, `de`, `fr`, `es`, etc.) |
 
-### Seed Example
+### Reproducible Tests with Seeds
+
 ```javascript
 const seed = 12345;
 
+// These will always generate identical data
 cy.task('generateUser', { seed }).then((user1) => {
   cy.task('generateUser', { seed }).then((user2) => {
-    // user1 and user2 are identical
+    expect(user1.email).to.equal(user2.email);
     expect(user1.firstName).to.equal(user2.firstName);
   });
 });
 ```
 
-### Locale Example
+### Localized Data
+
 ```javascript
+// German names and addresses
 cy.task('generateUser', { locale: 'de' }).then((user) => {
-  // German names and addresses
+  // User with German-style data
+});
+
+// French company
+cy.task('generateCompany', { locale: 'fr' }).then((company) => {
+  // Company with French-style data
 });
 ```
+
+---
 
 ## Schema Validators
 
-The plugin includes centralized schema validators for testing:
+The plugin includes reusable schema validators for cleaner tests:
 
 ```javascript
-import { expectValidUser, expectValidProduct } from '../support/schemas';
+import { expectValidUser, expectValidProduct, expectValidOrder } from '../support/schemas';
 
-it('generates valid user', () => {
-  cy.task('generateUser').then(expectValidUser);
-});
+describe('Data Generation', () => {
+  it('generates valid user', () => {
+    cy.task('generateUser').then(expectValidUser);
+  });
 
-it('generates valid product', () => {
-  cy.task('generateProduct').then(expectValidProduct);
+  it('generates valid product', () => {
+    cy.task('generateProduct').then(expectValidProduct);
+  });
+
+  it('generates valid order', () => {
+    cy.task('generateOrder').then(expectValidOrder);
+  });
 });
 ```
+
+---
 
 ## Error Handling
 
-Invalid options return descriptive errors:
+The plugin provides descriptive errors for invalid inputs:
 
 ```javascript
+// Invalid age range
 cy.task('generateUser', { ageMin: 50, ageMax: 30 }).then((result) => {
-  // { error: 'Max 30 should be greater than min 50' }
+  // Returns: { error: 'Max 30 should be greater than min 50' }
 });
 ```
 
+---
+
 ## Requirements
 
-- Cypress 13.0.0+
-- Node.js 18+
+| Dependency | Version |
+|------------|---------|
+| Cypress | 13.0.0+ |
+| Node.js | 18+ |
+
+---
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions are welcome! Please feel free to submit a [Pull Request](https://github.com/khawjaahmad/cypress-test-data-generator/pulls).
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+---
 
 ## License
 
-MIT License - see [LICENSE](LICENSE) for details.
+MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+<div align="center">
+
+Made with :heart: by [Ahmad Waqar](https://github.com/khawjaahmad)
+
+</div>
