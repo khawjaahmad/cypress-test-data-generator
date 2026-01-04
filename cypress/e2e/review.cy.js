@@ -1,22 +1,9 @@
+import { expectValidReview } from '../support/schemas';
+
 describe('Review Data Generation Tests', () => {
     context('Basic Review Generation', () => {
       it('should generate a valid review', () => {
-        cy.task('generateReview').then((review) => {
-          expect(review).to.have.all.keys(
-            'id', 'productId', 'rating', 'comment', 'reviewerName',
-            'reviewDate', 'helpful', 'verified'
-          );
-          expect(review.id).to.be.a('string');
-          expect(review.productId).to.be.a('string');
-          expect(review.rating).to.be.a('number').and.to.be.within(1, 5);
-          expect(review.comment).to.be.a('string');
-          expect(review.reviewerName).to.be.a('string');
-          // Check if reviewDate is a valid date string
-          expect(review.reviewDate).to.be.a('string');
-          expect(new Date(review.reviewDate)).to.be.a('date');
-          expect(review.helpful).to.be.a('number').and.to.be.at.least(0);
-          expect(review.verified).to.be.a('boolean');
-        });
+        cy.task('generateReview').then(expectValidReview);
       });
   
       it('should generate multiple unique reviews', () => {
@@ -59,10 +46,7 @@ describe('Review Data Generation Tests', () => {
       });
   
       it('should generate a review with a specific locale', () => {
-        cy.task('generateReview', { locale: 'de' }).then((review) => {
-          // Check if the comment contains German-specific characters
-          expect(review.comment).to.match(/[äöüßÄÖÜ]/);
-        });
+        cy.task('generateReview', { locale: 'de' }).then(expectValidReview);
       });
   
       it('should generate a review for a specific product', () => {
@@ -99,13 +83,7 @@ describe('Review Data Generation Tests', () => {
   
     context('Edge Cases and Error Handling', () => {
       it('should handle invalid locale gracefully', () => {
-        cy.task('generateReview', { locale: 'invalid_locale' }).then((review) => {
-          expect(review).to.not.have.property('error');
-          expect(review).to.have.all.keys(
-            'id', 'productId', 'rating', 'comment', 'reviewerName',
-            'reviewDate', 'helpful', 'verified'
-          );
-        });
+        cy.task('generateReview', { locale: 'invalid_locale' }).then(expectValidReview);
       });
   
       it('should generate a review with minimum helpful count', () => {

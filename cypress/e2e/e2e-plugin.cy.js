@@ -56,7 +56,7 @@ describe('Data Generator Plugin', () => {
       const shippingMethod = generator.generateShippingMethod();
       expect(shippingMethod).to.have.all.keys('id', 'name', 'price', 'estimatedDeliveryDays', 'provider', 'isAvailable');
       expect(shippingMethod.id).to.be.a('string');
-      expect(shippingMethod.name).to.be.oneOf(['Standard', 'Express', 'Overnight']);
+      expect(shippingMethod.name).to.be.oneOf(['Standard', 'Express', 'Overnight', 'Economy', 'Priority']);
       expect(shippingMethod.price).to.be.a('number');
       expect(shippingMethod.estimatedDeliveryDays).to.be.a('number');
       expect(shippingMethod.provider).to.be.a('string');
@@ -69,7 +69,7 @@ describe('Data Generator Plugin', () => {
       const paymentMethod = generator.generatePaymentMethod();
       expect(paymentMethod).to.have.all.keys('id', 'type', 'name', 'isDefault', 'lastFour', 'expiryDate');
       expect(paymentMethod.id).to.be.a('string');
-      expect(paymentMethod.type).to.be.oneOf(['Credit Card', 'PayPal', 'Bank Transfer', 'Cash on Delivery']);
+      expect(paymentMethod.type).to.be.oneOf(['Credit Card', 'Debit Card', 'PayPal', 'Bank Transfer', 'Cash on Delivery', 'Apple Pay', 'Google Pay']);
       expect(paymentMethod.name).to.be.a('string');
       expect(paymentMethod.isDefault).to.be.a('boolean');
       expect(paymentMethod.lastFour).to.be.a('string').and.to.have.lengthOf(4);
@@ -276,13 +276,13 @@ describe('Data Generator Plugin', () => {
         expect(itinerary.destination).to.be.a('string');
         expect(itinerary.departureDate).to.be.a('string');
         expect(itinerary.returnDate).to.be.a('string');
-        expect(itinerary.flightDetails).to.be.an('object');
-        expect(itinerary.hotelReservation).to.be.an('object');
-        expect(itinerary.carRental).to.be.an('object');
-        expect(itinerary.plannedActivities).to.be.an('array');
-        expect(itinerary.travelInsurance).to.be.an('object');
+        expect(itinerary.flightDetails).to.be.an('object').and.to.have.all.keys('airline', 'flightNumber', 'departureTime', 'arrivalTime');
+        expect(itinerary.hotelReservation).to.be.an('object').and.to.have.all.keys('hotelName', 'checkIn', 'checkOut', 'roomType');
+        expect(itinerary.carRental).to.be.an('object').and.to.have.all.keys('company', 'carModel', 'pickupLocation');
+        expect(itinerary.plannedActivities).to.be.an('array').and.to.have.length(3);
+        expect(itinerary.travelInsurance).to.be.an('object').and.to.have.all.keys('provider', 'policyNumber');
         expect(itinerary.passportNumber).to.be.a('string');
-        expect(itinerary.emergencyContact).to.be.an('object');
+        expect(itinerary.emergencyContact).to.be.an('object').and.to.have.all.keys('name', 'phone', 'relationship');
       });
     });
 

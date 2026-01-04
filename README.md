@@ -1,300 +1,276 @@
-# Cypress Test Data Generator Plugin
+# Cypress Test Data Generator
 
-Generate realistic and diverse test data for Cypress tests using Faker.js. This plugin enhances your test suites with random data for various entities.
+Generate realistic test data for Cypress tests using Faker.js. This plugin provides 40+ generators covering users, e-commerce, social, business, finance, and more.
 
 ## Features
 
-- Generate data for:
-  - Users (with customizable age ranges and countries)
-  - Products (including name, price, stock status)
-  - Orders (with multiple products)
-  - Reviews (with ratings and comments)
-  - Categories
-  - Companies (including industry, revenue, employees)
-  - Medical records
-  - Travel itineraries
-  - Education records
-  - Job listings
-  - Vehicles
-- Support for localization
-- Consistent data generation with seed support
+- **40+ Data Generators** across multiple domains
+- **Seed Support** for reproducible test data
+- **Locale Support** for internationalization
+- **Modular Architecture** with domain-specific generators
+- **TypeScript-friendly** with consistent APIs
 
 ## Installation
 
-1. Install the plugin as a dev dependency:
-   ```bash
-   npm install --save-dev cypress-test-data-generator
-   ```
+```bash
+npm install --save-dev cypress-test-data-generator
+```
 
-2. Include the plugin in your Cypress configuration (usually in `cypress.config.js`):
-   ```javascript
-   const dataGenerator = require('cypress-test-data-generator');
+## Setup
 
-   module.exports = defineConfig({
-     e2e: {
-       setupNodeEvents(on, config) {
-         on('task', dataGenerator(on, config));
-       },
-     },
-   });
-   ```
-
-## Usage
-
-### Generating a User
+Add the plugin to your `cypress.config.js`:
 
 ```javascript
-cy.task('generateUser', { ageRange: { min: 20, max: 30 }, country: 'USA' }).then((user) => {
-  cy.log(`Generated User: ${JSON.stringify(user)}`);
+const { defineConfig } = require('cypress');
+const dataGenerator = require('cypress-test-data-generator');
+
+module.exports = defineConfig({
+  e2e: {
+    setupNodeEvents(on, config) {
+      on('task', dataGenerator(on, config));
+    },
+  },
 });
 ```
 
-### Generating a Product
+## Quick Start
 
 ```javascript
+// Generate a user
+cy.task('generateUser').then((user) => {
+  // { id, firstName, lastName, email, phone, avatar, dateOfBirth, gender, address, preferences }
+});
+
+// Generate with options
+cy.task('generateUser', {
+  seed: 12345,           // Reproducible data
+  locale: 'de',          // German locale
+  ageMin: 25,
+  ageMax: 35
+});
+```
+
+## Available Generators
+
+### User & Profile
+| Generator | Description |
+|-----------|-------------|
+| `generateUser` | User with profile, address, preferences |
+| `generateAddress` | Standalone address with coordinates |
+
+### E-commerce
+| Generator | Description |
+|-----------|-------------|
+| `generateProduct` | Product with SKU, pricing, stock |
+| `generateProductWithRelations` | Product with related products |
+| `generateOrder` | Order with products, shipping |
+| `generateReview` | Product review with rating |
+| `generateCategory` | Product category with hierarchy |
+| `generateCart` | Shopping cart with items |
+| `generateWishlist` | User wishlist |
+| `generateReturn` | Return/refund request |
+| `generateInventory` | Product inventory |
+| `generateCoupon` | Discount coupon |
+| `generateShippingMethod` | Shipping option |
+| `generatePaymentMethod` | Payment method |
+
+### Social & Communication
+| Generator | Description |
+|-----------|-------------|
+| `generateSocialProfile` | Social media profile |
+| `generateComment` | Comment with replies |
+| `generateNotification` | App notification |
+| `generateMessage` | Chat/direct message |
+
+### Business & Enterprise
+| Generator | Description |
+|-----------|-------------|
+| `generateCompany` | Company with industry, revenue |
+| `generateInvoice` | Invoice with line items |
+| `generateEmployee` | Employee with department, salary |
+| `generateProject` | Project with team, milestones |
+| `generateTicket` | Support ticket |
+| `generateMeeting` | Meeting with attendees |
+| `generateJobListing` | Job posting |
+
+### Finance
+| Generator | Description |
+|-----------|-------------|
+| `generateBankAccount` | Bank account with balance |
+| `generateLoan` | Loan with terms |
+| `generateInsurancePolicy` | Insurance policy |
+| `generateCreditCard` | Credit card details |
+| `generateTransaction` | Financial transaction |
+| `generateSubscription` | Subscription plan |
+
+### Content & Media
+| Generator | Description |
+|-----------|-------------|
+| `generateBlogPost` | Blog post with SEO |
+| `generateEvent` | Event with tickets, speakers |
+
+### Travel & Automotive
+| Generator | Description |
+|-----------|-------------|
+| `generateTravelItinerary` | Travel plan with flights, hotels |
+| `generateVehicle` | Vehicle with specs |
+
+### Real Estate
+| Generator | Description |
+|-----------|-------------|
+| `generateProperty` | Property listing |
+
+### Food & Restaurant
+| Generator | Description |
+|-----------|-------------|
+| `generateRestaurant` | Restaurant with hours, features |
+| `generateMenuItem` | Menu item with nutrition |
+| `generateFoodOrder` | Food delivery order |
+
+### Technical & API
+| Generator | Description |
+|-----------|-------------|
+| `generateApiResponse` | API response with pagination |
+| `generateLogEntry` | Application log entry |
+
+### Healthcare & Education
+| Generator | Description |
+|-----------|-------------|
+| `generateMedicalRecord` | Medical record |
+| `generateEducation` | Education record |
+
+## Usage Examples
+
+### E-commerce Flow
+```javascript
+// Create product catalog
 cy.task('generateProduct').then((product) => {
-  cy.log(`Generated Product: ${JSON.stringify(product)}`);
+  cy.task('generateReview', { productId: product.id }).then((review) => {
+    // Test product with review
+  });
 });
-```
 
-### Generating an Order
-
-```javascript
+// Generate order with multiple products
 cy.task('generateOrder', { productCount: 5 }).then((order) => {
-  cy.log(`Generated Order: ${JSON.stringify(order)}`);
+  expect(order.products).to.have.length(5);
+  expect(order.totalAmount).to.be.a('number');
+});
+
+// Shopping cart
+cy.task('generateCart', { itemCount: 3 }).then((cart) => {
+  expect(cart.items).to.have.length(3);
+  expect(cart.total).to.equal(cart.subtotal + cart.tax - cart.discount);
 });
 ```
 
-### Generating a Review
+### Business Operations
+```javascript
+// Generate invoice
+cy.task('generateInvoice', { itemCount: 5 }).then((invoice) => {
+  expect(invoice.invoiceNumber).to.match(/^INV-\d{6}$/);
+  expect(invoice.status).to.be.oneOf(['draft', 'sent', 'paid', 'overdue']);
+});
+
+// Generate employee
+cy.task('generateEmployee', { department: 'Engineering' }).then((employee) => {
+  expect(employee.department).to.equal('Engineering');
+  expect(employee.employeeId).to.match(/^EMP-\d{6}$/);
+});
+```
+
+### Social Features
+```javascript
+// Social profile for specific platform
+cy.task('generateSocialProfile', { platform: 'instagram' }).then((profile) => {
+  expect(profile.platform).to.equal('instagram');
+  expect(profile.followers).to.be.a('number');
+});
+
+// Generate notification
+cy.task('generateNotification', { type: 'payment' }).then((notification) => {
+  expect(notification.type).to.equal('payment');
+  expect(notification.priority).to.be.oneOf(['low', 'medium', 'high', 'urgent']);
+});
+```
+
+### Financial Data
+```javascript
+// Bank account
+cy.task('generateBankAccount').then((account) => {
+  expect(account.accountType).to.be.oneOf(['checking', 'savings', 'money_market']);
+  expect(account.balance).to.be.a('number');
+});
+
+// Loan
+cy.task('generateLoan', { type: 'mortgage' }).then((loan) => {
+  expect(loan.type).to.equal('mortgage');
+  expect(loan.loanNumber).to.match(/^LN-\d{10}$/);
+});
+```
+
+## Common Options
+
+All generators support these options:
+
+| Option | Type | Description |
+|--------|------|-------------|
+| `seed` | `number` | Seed for reproducible data |
+| `locale` | `string` | Locale code (e.g., 'en', 'de', 'fr') |
+
+### Seed Example
+```javascript
+const seed = 12345;
+
+cy.task('generateUser', { seed }).then((user1) => {
+  cy.task('generateUser', { seed }).then((user2) => {
+    // user1 and user2 are identical
+    expect(user1.firstName).to.equal(user2.firstName);
+  });
+});
+```
+
+### Locale Example
+```javascript
+cy.task('generateUser', { locale: 'de' }).then((user) => {
+  // German names and addresses
+});
+```
+
+## Schema Validators
+
+The plugin includes centralized schema validators for testing:
 
 ```javascript
-cy.task('generateReview').then((review) => {
-  cy.log(`Generated Review: ${JSON.stringify(review)}`);
+import { expectValidUser, expectValidProduct } from '../support/schemas';
+
+it('generates valid user', () => {
+  cy.task('generateUser').then(expectValidUser);
+});
+
+it('generates valid product', () => {
+  cy.task('generateProduct').then(expectValidProduct);
 });
 ```
-
-### Generating a Category
-
-```javascript
-cy.task('generateCategory').then((category) => {
-  cy.log(`Generated Category: ${JSON.stringify(category)}`);
-});
-```
-
-### Generating a Company
-
-```javascript
-cy.task('generateCompany').then((company) => {
-  cy.log(`Generated Company: ${JSON.stringify(company)}`);
-});
-```
-
-### Generating a Medical Record
-
-```javascript
-cy.task('generateMedicalRecord').then((record) => {
-  cy.log(`Generated Medical Record: ${JSON.stringify(record)}`);
-});
-```
-
-### Generating a Travel Itinerary
-
-```javascript
-cy.task('generateTravelItinerary').then((itinerary) => {
-  cy.log(`Generated Travel Itinerary: ${JSON.stringify(itinerary)}`);
-});
-```
-
-### Generating Education Data
-
-```javascript
-cy.task('generateEducation').then((education) => {
-  cy.log(`Generated Education: ${JSON.stringify(education)}`);
-});
-```
-
-### Generating a Job Listing
-
-```javascript
-cy.task('generateJobListing').then((jobListing) => {
-  cy.log(`Generated Job Listing: ${JSON.stringify(jobListing)}`);
-});
-```
-
-### Generating Vehicle Data
-
-```javascript
-cy.task('generateVehicle').then((vehicle) => {
-  cy.log(`Generated Vehicle: ${JSON.stringify(vehicle)}`);
-});
-```
-
-## API
-
-### `generateUser(options)`
-
-Generates a random user object.
-
-- **Options:**
-  - `seed`: Number to seed the random generator for consistent results
-  - `locale`: Locale for localized data generation
-  - `ageRange`: An object specifying the minimum and maximum age (default: `{ min: 18, max: 99 }`)
-  - `country`: Specific country for the user's address (default: random)
-  - `ageMin`: Minimum age (default: 18)
-  - `ageMax`: Maximum age (default: 99)
-
-### `generateProduct(options)`
-
-Generates a random product object.
-
-- **Options:**
-  - `seed`: Number to seed the random generator
-  - `locale`: Locale for localized data generation
-  - `customFields`: Object with additional fields to include
-  - `relatedProducts`: Array of related product objects
-
-### `generateOrder(options)`
-
-Generates a random order object.
-
-- **Options:**
-  - `seed`: Number to seed the random generator
-  - `locale`: Locale for localized data generation
-  - `productCount`: Number of products in the order (default: 3)
-
-### `generateReview(options)`
-
-Generates a random review object.
-
-- **Options:**
-  - `seed`: Number to seed the random generator
-  - `locale`: Locale for localized data generation
-  - `productId`: Specific product ID for the review
-
-### `generateCategory(options)`
-
-Generates a random category object.
-
-- **Options:**
-  - `seed`: Number to seed the random generator
-  - `locale`: Locale for localized data generation
-  - `parentId`: ID of the parent category (default: null)
-
-### `generateInventory(productId, options)`
-
-Generates a random inventory object for a product.
-
-- **Parameters:**
-  - `productId`: ID of the product
-- **Options:**
-  - `seed`: Number to seed the random generator
-  - `locale`: Locale for localized data generation
-
-### `generateCoupon(options)`
-
-Generates a random coupon object.
-
-- **Options:**
-  - `seed`: Number to seed the random generator
-  - `locale`: Locale for localized data generation
-
-### `generateShippingMethod(options)`
-
-Generates a random shipping method object.
-
-- **Options:**
-  - `seed`: Number to seed the random generator
-  - `locale`: Locale for localized data generation
-
-### `generatePaymentMethod(options)`
-
-Generates a random payment method object.
-
-- **Options:**
-  - `seed`: Number to seed the random generator
-  - `locale`: Locale for localized data generation
-
-### `generateRelatedProducts(mainProductId, count, options)`
-
-Generates an array of related product objects.
-
-- **Parameters:**
-  - `mainProductId`: ID of the main product
-  - `count`: Number of related products to generate (default: 3)
-- **Options:**
-  - `seed`: Number to seed the random generator
-  - `locale`: Locale for localized data generation
-
-### `generateProductWithRelations(options)`
-
-Generates a product object with related products.
-
-- **Options:**
-  - `seed`: Number to seed the random generator
-  - `locale`: Locale for localized data generation
-  - `relatedProductCount`: Number of related products to generate (default: 3)
-
-### `generateJobListing(options)`
-
-Generates a random job listing object.
-
-- **Options:**
-  - `seed`: Number to seed the random generator
-  - `locale`: Locale for localized data generation
-
-### `generateEducation(options)`
-
-Generates a random education object.
-
-- **Options:**
-  - `seed`: Number to seed the random generator
-  - `locale`: Locale for localized data generation
-
-### `generateCompany(options)`
-
-Generates a random company object.
-
-- **Options:**
-  - `seed`: Number to seed the random generator
-  - `locale`: Locale for localized data generation
-
-### `generateMedicalRecord(options)`
-
-Generates a random medical record object.
-
-- **Options:**
-  - `seed`: Number to seed the random generator
-  - `locale`: Locale for localized data generation
-
-### `generateTravelItinerary(options)`
-
-Generates a random travel itinerary object.
-
-- **Options:**
-  - `seed`: Number to seed the random generator
-  - `locale`: Locale for localized data generation
-
-### `generateVehicle(options)`
-
-Generates a random vehicle object.
-
-- **Options:**
-  - `seed`: Number to seed the random generator
-  - `locale`: Locale for localized data generation
 
 ## Error Handling
 
-The plugin includes robust error handling for invalid inputs. If provided options are invalid (e.g., invalid age range), the plugin will throw descriptive errors to aid in debugging.
+Invalid options return descriptive errors:
 
-## Example Tests
+```javascript
+cy.task('generateUser', { ageMin: 50, ageMax: 30 }).then((result) => {
+  // { error: 'Max 30 should be greater than min 50' }
+});
+```
 
-For detailed usage examples, refer to our [example tests](https://github.com/khawjaahmad/cypress-test-data-generator/tree/main/cypress/e2e) in the `cypress/e2e` directory. These tests cover:
+## Requirements
 
-- Basic plugin usage
-- Data generation for users, products, orders, reviews, companies, medical records, travel itineraries, education, job listings, and vehicles
-
-Each file demonstrates various aspects and options of the data generator, serving as both functional verification and practical examples for users.
+- Cypress 13.0.0+
+- Node.js 18+
 
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+MIT License - see [LICENSE](LICENSE) for details.

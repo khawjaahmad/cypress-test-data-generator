@@ -1,11 +1,36 @@
+# Test files
 cypress/
-cypress-documentation/
-node_modules/
+*.cy.js
+
+# Development
 .git/
-.gitignore
-.npmignore
-*.log
-.DS_Store
+.github/
 .vscode/
 .idea/
-.github
+
+# Documentation (keep README)
+cypress-documentation/
+docs/
+
+# Config files
+.gitignore
+.npmignore
+.eslintrc*
+.prettierrc*
+cypress.config.js
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Coverage
+coverage/
+.nyc_output/
+
+# Build artifacts
+dist/
+build/

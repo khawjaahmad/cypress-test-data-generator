@@ -1,13 +1,8 @@
+import { expectValidOrder } from '../support/schemas';
+
 describe('Order Data Generation - Happy Scenarios', () => {
     it('generates a basic order', () => {
-      cy.task('generateOrder').then((order) => {
-        expect(order).to.have.property('id')
-        expect(order).to.have.property('customerName')
-        expect(order).to.have.property('orderDate')
-        expect(order).to.have.property('products').and.to.be.an('array')
-        expect(order).to.have.property('shippingAddress')
-        expect(order).to.have.property('totalAmount')
-      })
+      cy.task('generateOrder').then(expectValidOrder);
     })
   
     it('generates an order with multiple products', () => {
