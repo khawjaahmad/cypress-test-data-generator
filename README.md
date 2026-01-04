@@ -409,6 +409,6 @@ MIT License - see the [LICENSE](LICENSE) file for details.
 
 <div align="center">
 
-Made with :heart: by [Ahmad Waqar](https://github.com/khawjaahmad)
+Made with 🔧 by [Ahmad Waqar](https://github.com/khawjaahmad)
 
 </div>
