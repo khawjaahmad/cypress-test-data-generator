@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "types": "./src/index.d.ts",
   "bin": {
-    "ctdg": "./bin/ctdg.js"
+    "ctdg": "bin/ctdg.js"
   },
   "exports": {
     ".": {
