@@ -5,6 +5,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.0] - 2026-04-22
+
+### Added
+- **Relational scenarios** — new `cy.scenario({ users, ordersPerUser, productsPerOrder, reviewsPerProduct, seed })` returns users, products, orders, and reviews with guaranteed foreign-key integrity: `order.userId` references a real user, `order.shippingAddress` matches that user's address, `order.products` are sampled from a shared catalog, and `review.productId`/`review.userId` link to real entities. Also available as `cy.generateScenario()` and `cy.task('generateScenario')`. Schema-enforced via `ScenarioSchema` with `superRefine` FK checks.
+- **`cy.mockApi(url, options)`** — one-line `cy.intercept` replacement for mocking API endpoints with generated data. Supports `generator`, `count`, `paginated` (wraps in `{ data, meta }` envelope), `status`, `headers`, `delay`, static `body`, relational `scenario`, and custom `transform`.
+- **Native Cypress commands** — `cy.generateUser()`, `cy.generateProduct()`, `cy.scenario()`, `cy.mockApi()`, and 40+ others available globally after one import: `import 'cypress-test-data-generator/commands'` in `cypress/support/e2e.js`. Chainable, aliasable, and typed via `src/commands.d.ts` augmenting `Cypress.Chainable`.
+- **`dataGenerator.registerTasks(on, config)`** — replaces the ~50-line `on('task', { ... })` block in `cypress.config.js` with a single line.
+- **`ctdg` CLI** — the plugin now ships a binary (`npx ctdg`) that generates fixtures outside Cypress. Supports every generator plus `generateScenario`, with flags for `--count`, `--seed`, `--locale`, `--pretty`, `--output`, and `--format json|jsonl`.
+- **TypeScript definitions** (`src/index.d.ts`) — all 41 generators, options, and return shapes are fully typed. `generateBulk('generateUser', n)` infers `User[]` via a method-name overload.
+- **Runtime Zod schemas** exposed at the subpath `cypress-test-data-generator/schemas` so consumers can validate real API responses against the exact shape the generators produce. `zod ^3.23.0` is an optional peer dependency; only needed if you import the schemas subpath.
+- **`strict` option on `generateUser`** — when `{ strict: true }`, invalid options throw instead of returning `{ error: string }`. The default remains `{ error }` for backwards compatibility and will flip in v3.
+- **Benchmark script** (`npm run bench`) and **schema parity check** (`npm run schemas:check`) for CI.
+- **Seed-isolation regression tests** (`cypress/e2e/isolation.cy.js`).
+
+### Changed
+- **Faker instances are now hermetic per call.** Previously, `initFaker` mutated a shared module-level Faker singleton, allowing a seeded call to leak determinism into later unseeded calls (order-dependent flakes). Each generator call now constructs a fresh Faker with its own locale chain. No consumer-visible API change; correctness only.
+- Published tarball now uses a `files` whitelist, dropping ~110 kB of test/config artifacts. Subpath `exports` map added for the `/schemas` and `/commands` entry points, with a `./src/*` fallback to preserve any pre-existing deep imports.
+
+### Fixed
+- `cypress/e2e/order.cy.js` — the `calculates total amount correctly` assertion used exact float equality against an un-rounded `reduce`, occasionally drifting (`2640.24 !== 2640.2400000000002`). Now uses `closeTo(_, 0.01)` to match the generator's 2-decimal rounding.
+
+### Deprecated
+- The `{ error: string }` return shape from `generateUser`. Pass `strict: true` to get the future behavior today; the default will flip in v3.
+
 ## [2.0.2] - 2025-01-05
 
 ### Changed

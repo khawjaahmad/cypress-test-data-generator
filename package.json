@@ -1,8 +1,36 @@
 {
   "name": "cypress-test-data-generator",
-  "version": "2.0.2",
+  "version": "2.1.0",
   "description": "Cypress plugin for generating test data using Faker",
   "main": "src/index.js",
+  "types": "./src/index.d.ts",
+  "bin": {
+    "ctdg": "./bin/ctdg.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "default": "./src/index.js"
+    },
+    "./schemas": {
+      "types": "./src/schemas/index.d.ts",
+      "default": "./src/schemas/index.js"
+    },
+    "./commands": {
+      "types": "./src/commands.d.ts",
+      "default": "./src/commands.js"
+    },
+    "./package.json": "./package.json",
+    "./src/*": "./src/*"
+  },
+  "files": [
+    "src/",
+    "bin/",
+    "scripts/",
+    "LICENSE",
+    "README.md",
+    "CHANGELOG.md"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/khawjaahmad/cypress-test-data-generator.git"
@@ -12,7 +40,12 @@
   },
   "scripts": {
     "test": "cypress run",
-    "test:e2e": "cypress run"
+    "test:e2e": "cypress run",
+    "bench": "node scripts/benchmark.js",
+    "types:check": "tsc -p tsconfig.json",
+    "schemas:check": "node scripts/parity-check.js",
+    "cli:smoke": "node scripts/cli-smoke.js",
+    "release:local": "node scripts/release-local.js"
   },
   "keywords": [
     "cypress",
@@ -25,7 +58,17 @@
   "dependencies": {
     "@faker-js/faker": "^10.2.0"
   },
+  "peerDependencies": {
+    "zod": "^4.3.6"
+  },
+  "peerDependenciesMeta": {
+    "zod": {
+      "optional": true
+    }
+  },
   "devDependencies": {
-    "cypress": "^15.8.1"
+    "cypress": "^15.14.0",
+    "typescript": "^6.0.3",
+    "zod": "^4.3.6"
   }
 }

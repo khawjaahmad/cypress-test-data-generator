@@ -9,6 +9,7 @@ const createRealEstateGenerators = require('./realestate');
 const createFoodGenerators = require('./food');
 const createTechnicalGenerators = require('./technical');
 const createHealthcareGenerators = require('./healthcare');
+const createScenarioGenerator = require('./scenario');
 
 module.exports = {
     createUserGenerators,
@@ -21,5 +22,6 @@ module.exports = {
     createRealEstateGenerators,
     createFoodGenerators,
     createTechnicalGenerators,
-    createHealthcareGenerators
+    createHealthcareGenerators,
+    createScenarioGenerator
 };

@@ -4,5 +4,6 @@
 // Import commands.js using ES2015 syntax:
 import './commands'
 
-// Alternatively you can use CommonJS syntax:
-// require('./commands')
+// Register native Cypress commands shipped by this plugin:
+// cy.generateUser(), cy.scenario(), cy.mockApi(), etc.
+import '../../src/commands'

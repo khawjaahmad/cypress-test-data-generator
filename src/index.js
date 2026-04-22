@@ -1,7 +1,6 @@
 const { createPluginSystem, initFaker } = require('./utils/faker-utils');
 const { validatePositiveInteger } = require('./utils/validators');
 
-// Import all generator creators
 const {
     createUserGenerators,
     createEcommerceGenerators,
@@ -13,30 +12,20 @@ const {
     createRealEstateGenerators,
     createFoodGenerators,
     createTechnicalGenerators,
-    createHealthcareGenerators
+    createHealthcareGenerators,
+    createScenarioGenerator
 } = require('./generators');
 
 /**
- * Cypress Test Data Generator Plugin
- * Generates realistic test data using Faker.js
- *
- * @param {Object} _on - Cypress event listener (reserved for future use)
- * @param {Object} _config - Cypress config (reserved for future use)
- * @returns {Object} Generator object with all data generation methods
+ * Create the plugin. Returns an object containing every generator method
+ * plus `registerPlugin`, `setSeed`, `setLocale`, and `generateBulk`.
  */
 function dataGenerator(_on, _config) {
-    // Create plugin system
-    const pluginSystem = createPluginSystem();
-    const { registerPlugin, applyPlugins } = pluginSystem;
+    const { registerPlugin, applyPlugins } = createPluginSystem();
 
-    // Seed and locale management
     let currentSeed = null;
     let currentLocale = 'en';
 
-    /**
-     * Set the random seed for reproducible data
-     * @param {number|string} seed - Seed value
-     */
     const setSeed = (seed) => {
         if (seed !== undefined && seed !== null) {
             const numericSeed = typeof seed === 'string' ? parseInt(seed, 10) : seed;
@@ -46,47 +35,20 @@ function dataGenerator(_on, _config) {
         }
     };
 
-    /**
-     * Set the locale for data generation
-     * @param {string} locale - Locale code (e.g., 'en', 'de', 'fr')
-     */
     const setLocale = (locale) => {
         if (locale) {
             currentLocale = locale;
         }
     };
 
-    // Initialize all generators with plugin system
-    const userGenerators = createUserGenerators(applyPlugins);
-    const ecommerceGenerators = createEcommerceGenerators(applyPlugins);
-    const socialGenerators = createSocialGenerators(applyPlugins);
-    const businessGenerators = createBusinessGenerators(applyPlugins);
-    const financeGenerators = createFinanceGenerators(applyPlugins);
-    const contentGenerators = createContentGenerators(applyPlugins);
-    const travelGenerators = createTravelGenerators(applyPlugins);
-    const realEstateGenerators = createRealEstateGenerators(applyPlugins);
-    const foodGenerators = createFoodGenerators(applyPlugins);
-    const technicalGenerators = createTechnicalGenerators(applyPlugins);
-    const healthcareGenerators = createHealthcareGenerators(applyPlugins);
-
-    // Combine all generators
     const generator = {
-        // Core utilities
         registerPlugin,
         setSeed,
         setLocale,
 
-        /**
-         * Generate bulk data using a generator function
-         * @param {Function|string} generateFunc - Generator function or method name
-         * @param {number} count - Number of items to generate
-         * @param {Object} options - Options to pass to generator
-         * @returns {Array} Array of generated items
-         */
         generateBulk(generateFunc, count, options = {}) {
             validatePositiveInteger(count, 'count');
 
-            // Handle string method names
             const fn = typeof generateFunc === 'string'
                 ? generator[generateFunc]
                 : generateFunc;
@@ -103,63 +65,114 @@ function dataGenerator(_on, _config) {
             });
         },
 
-        // ============================================
-        // USER & PROFILE GENERATORS
-        // ============================================
-        ...userGenerators,
-
-        // ============================================
-        // E-COMMERCE GENERATORS
-        // ============================================
-        ...ecommerceGenerators,
-
-        // ============================================
-        // SOCIAL & COMMUNICATION GENERATORS
-        // ============================================
-        ...socialGenerators,
-
-        // ============================================
-        // BUSINESS & ENTERPRISE GENERATORS
-        // ============================================
-        ...businessGenerators,
-
-        // ============================================
-        // FINANCE GENERATORS
-        // ============================================
-        ...financeGenerators,
-
-        // ============================================
-        // CONTENT & MEDIA GENERATORS
-        // ============================================
-        ...contentGenerators,
-
-        // ============================================
-        // TRAVEL & AUTOMOTIVE GENERATORS
-        // ============================================
-        ...travelGenerators,
-
-        // ============================================
-        // REAL ESTATE GENERATORS
-        // ============================================
-        ...realEstateGenerators,
-
-        // ============================================
-        // FOOD & RESTAURANT GENERATORS
-        // ============================================
-        ...foodGenerators,
-
-        // ============================================
-        // TECHNICAL & API GENERATORS
-        // ============================================
-        ...technicalGenerators,
-
-        // ============================================
-        // HEALTHCARE & EDUCATION GENERATORS
-        // ============================================
-        ...healthcareGenerators
+        ...createUserGenerators(applyPlugins),
+        ...createEcommerceGenerators(applyPlugins),
+        ...createSocialGenerators(applyPlugins),
+        ...createBusinessGenerators(applyPlugins),
+        ...createFinanceGenerators(applyPlugins),
+        ...createContentGenerators(applyPlugins),
+        ...createTravelGenerators(applyPlugins),
+        ...createRealEstateGenerators(applyPlugins),
+        ...createFoodGenerators(applyPlugins),
+        ...createTechnicalGenerators(applyPlugins),
+        ...createHealthcareGenerators(applyPlugins),
     };
+
+    // generateScenario composes other generators so it must be attached
+    // after the base `generator` object has been constructed.
+    Object.assign(generator, createScenarioGenerator(applyPlugins, generator));
 
     return generator;
 }
+
+// Adapters for tasks whose signatures don't match the usual `(options)` shape.
+const TASK_SIGNATURES = {
+    generateInventory: (args, gen) =>
+        gen.generateInventory(args && args.productId, args && args.options),
+    generateBulk: (args, gen) =>
+        gen.generateBulk(
+            args && args.generator,
+            args && args.count,
+            args && args.options
+        ),
+};
+
+const PASSTHROUGH_TASKS = [
+    'generateUser',
+    'generateAddress',
+    'generateProduct',
+    'generateProductWithRelations',
+    'generateOrder',
+    'generateReview',
+    'generateCategory',
+    'generateCoupon',
+    'generateShippingMethod',
+    'generatePaymentMethod',
+    'generateCart',
+    'generateWishlist',
+    'generateReturn',
+    'generateSocialProfile',
+    'generateComment',
+    'generateNotification',
+    'generateMessage',
+    'generateCompany',
+    'generateInvoice',
+    'generateEmployee',
+    'generateProject',
+    'generateTicket',
+    'generateMeeting',
+    'generateJobListing',
+    'generateCreditCard',
+    'generateTransaction',
+    'generateBankAccount',
+    'generateLoan',
+    'generateInsurancePolicy',
+    'generateSubscription',
+    'generateBlogPost',
+    'generateEvent',
+    'generateTravelItinerary',
+    'generateVehicle',
+    'generateProperty',
+    'generateRestaurant',
+    'generateMenuItem',
+    'generateFoodOrder',
+    'generateApiResponse',
+    'generateLogEntry',
+    'generateMedicalRecord',
+    'generateEducation',
+    'generateScenario',
+];
+
+/**
+ * Register every generator as a cy.task in a single call.
+ *
+ * @example
+ *   // cypress.config.js
+ *   const dataGenerator = require('cypress-test-data-generator');
+ *   module.exports = defineConfig({
+ *     e2e: {
+ *       setupNodeEvents(on, config) {
+ *         dataGenerator.registerTasks(on, config);
+ *         return config;
+ *       }
+ *     }
+ *   });
+ */
+function registerTasks(on, config) {
+    const gen = dataGenerator(on, config);
+    const tasks = {};
+
+    for (const name of PASSTHROUGH_TASKS) {
+        tasks[name] = (options) => gen[name](options);
+    }
+    for (const [name, adapter] of Object.entries(TASK_SIGNATURES)) {
+        tasks[name] = (args) => adapter(args, gen);
+    }
+
+    on('task', tasks);
+    return gen;
+}
+
+dataGenerator.registerTasks = registerTasks;
 
 module.exports = dataGenerator;

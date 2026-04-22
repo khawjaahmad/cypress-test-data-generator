@@ -41,7 +41,9 @@ describe('Order Data Generation - Happy Scenarios', () => {
     it('calculates total amount correctly', () => {
       cy.task('generateOrder', { productCount: 5 }).then((order) => {
         const calculatedTotal = order.products.reduce((sum, product) => sum + product.price, 0)
-        expect(order.totalAmount).to.equal(calculatedTotal)
+        // totalAmount is rounded to 2 decimals by the generator; compare
+        // with a small epsilon so JS float drift doesn't cause flakes.
+        expect(order.totalAmount).to.be.closeTo(calculatedTotal, 0.01)
       })
     })
   

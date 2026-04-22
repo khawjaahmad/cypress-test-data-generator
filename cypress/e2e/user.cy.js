@@ -139,4 +139,23 @@ describe('User Data Generation', () => {
         expect(result.error).to.include('Max 40 should be greater than min 50');
       });
     });
+
+    describe('strict mode', () => {
+      it('returns a valid user when strict:true + valid input', () => {
+        cy.task('generateUser', { strict: true, seed: 1 }).then((user) => {
+          expect(user).to.not.have.property('error');
+          expect(user).to.have.property('firstName').and.to.be.a('string');
+          expect(user).to.have.property('email');
+        });
+      });
+
+      it('rejects the task when strict:true + invalid age range', (done) => {
+        cy.once('fail', (err) => {
+          expect(err.message).to.include('Max 40 should be greater than min 50');
+          done();
+          return false; // prevent the test from actually failing
+        });
+        cy.task('generateUser', { strict: true, ageMin: 50, ageMax: 40 });
+      });
+    });
   });

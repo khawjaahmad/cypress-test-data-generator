@@ -1,0 +1,15 @@
+module.exports = {
+    ...require('./common'),
+    ...require('./user'),
+    ...require('./ecommerce'),
+    ...require('./social'),
+    ...require('./business'),
+    ...require('./finance'),
+    ...require('./content'),
+    ...require('./travel'),
+    ...require('./realestate'),
+    ...require('./food'),
+    ...require('./technical'),
+    ...require('./healthcare'),
+    ...require('./scenario'),
+};

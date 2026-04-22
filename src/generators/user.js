@@ -13,16 +13,17 @@ const createUserGenerators = (applyPlugins) => ({
      * @returns {Object} Generated user data
      */
     generateUser(options = {}) {
-        try {
-            const {
-                seed,
-                locale,
-                ageRange = { min: 18, max: 99 },
-                country = null,
-                ageMin = 18,
-                ageMax = 99
-            } = options;
+        const {
+            seed,
+            locale,
+            ageRange = { min: 18, max: 99 },
+            country = null,
+            ageMin = 18,
+            ageMax = 99,
+            strict = false
+        } = options;
 
+        try {
             const f = initFaker({ seed, locale });
 
             const effectiveMin = Math.max(ageMin, ageRange.min);
@@ -51,6 +52,7 @@ const createUserGenerators = (applyPlugins) => ({
 
             return applyPlugins(user);
         } catch (error) {
+            if (strict) throw error;
             return { error: error.message };
         }
     },

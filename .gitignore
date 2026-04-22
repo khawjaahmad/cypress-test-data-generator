@@ -11,6 +11,7 @@ cypress/videos/
 .idea/
 *.swp
 *.swo
+.claude/
 
 # OS
 .DS_Store
@@ -34,3 +35,6 @@ build/
 .env
 .env.local
 .env.*.local
+
+# Local pack artifacts from `npm pack` / `npm run release:local`
+*.tgz

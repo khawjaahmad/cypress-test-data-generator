@@ -1,34 +1,10 @@
 /**
- * Centralized schema validators for test data generators
- * Single source of truth for all generator output schemas
+ * Internal Chai-style validators used by this repo's Cypress specs.
+ *
+ * Consumers of the package should prefer the shipped Zod schemas at
+ * `cypress-test-data-generator/schemas` — they are the single source of
+ * truth and kept in sync via scripts/parity-check.js.
  */
-
-// ============================================
-// USER & PROFILE
-// ============================================
-
-export const expectValidUser = (user) => {
-  expect(user).to.be.an('object');
-  expect(user).to.have.all.keys(
-    'id', 'firstName', 'lastName', 'email', 'phone', 'avatar',
-    'dateOfBirth', 'gender', 'address', 'preferences'
-  );
-  expect(user.id).to.be.a('string');
-  expect(user.firstName).to.be.a('string');
-  expect(user.lastName).to.be.a('string');
-  expect(user.email).to.be.a('string');
-  expect(user.gender).to.be.oneOf(['male', 'female', 'other']);
-};
-
-export const expectValidAddress = (address) => {
-  expect(address).to.be.an('object');
-  expect(address).to.have.all.keys(
-    'id', 'street', 'city', 'state', 'zipCode', 'country',
-    'apartment', 'isDefault', 'type', 'coordinates'
-  );
-  expect(address.type).to.be.oneOf(['home', 'work', 'billing', 'shipping']);
-  expect(address.coordinates).to.have.all.keys('lat', 'lng');
-};
 
 // ============================================
 // E-COMMERCE
@@ -264,23 +240,6 @@ export const expectValidJobListing = (job) => {
 // FINANCE
 // ============================================
 
-export const expectValidCreditCard = (card) => {
-  expect(card).to.be.an('object');
-  expect(card).to.have.all.keys(
-    'id', 'cardNumber', 'cardHolder', 'expiryDate', 'cvv', 'cardType', 'isDefault'
-  );
-  expect(card.isDefault).to.be.a('boolean');
-};
-
-export const expectValidTransaction = (transaction) => {
-  expect(transaction).to.be.an('object');
-  expect(transaction).to.have.all.keys(
-    'id', 'amount', 'currency', 'type', 'status', 'date', 'description', 'accountNumber'
-  );
-  expect(transaction.type).to.be.oneOf(['purchase', 'refund', 'transfer', 'withdrawal', 'deposit']);
-  expect(transaction.status).to.be.oneOf(['pending', 'completed', 'failed', 'cancelled']);
-};
-
 export const expectValidBankAccount = (account) => {
   expect(account).to.be.an('object');
   expect(account).to.have.all.keys(
@@ -317,17 +276,6 @@ export const expectValidInsurancePolicy = (policy) => {
   expect(policy.policyNumber).to.match(/^POL-[A-Z0-9]{10}$/);
   expect(policy.type).to.be.oneOf(['health', 'auto', 'home', 'life', 'travel', 'pet', 'business', 'disability']);
   expect(policy.status).to.be.oneOf(['active', 'expired', 'cancelled', 'pending', 'suspended']);
-};
-
-export const expectValidSubscription = (subscription) => {
-  expect(subscription).to.be.an('object');
-  expect(subscription).to.have.all.keys(
-    'id', 'planName', 'price', 'billingCycle', 'status',
-    'startDate', 'nextBillingDate', 'features', 'autoRenew'
-  );
-  expect(subscription.planName).to.be.oneOf(['Basic', 'Standard', 'Premium', 'Enterprise']);
-  expect(subscription.billingCycle).to.be.oneOf(['monthly', 'quarterly', 'yearly']);
-  expect(subscription.status).to.be.oneOf(['active', 'cancelled', 'paused', 'expired']);
 };
 
 // ============================================
@@ -377,19 +325,6 @@ export const expectValidTravelItinerary = (itinerary) => {
   expect(itinerary.destination).to.be.a('string');
   expect(itinerary.departureDate).to.match(/^\d{4}-\d{2}-\d{2}$/);
   expect(itinerary.returnDate).to.match(/^\d{4}-\d{2}-\d{2}$/);
-};
-
-export const expectValidVehicle = (vehicle) => {
-  expect(vehicle).to.be.an('object');
-  expect(vehicle).to.have.all.keys(
-    'id', 'vin', 'make', 'model', 'year', 'color', 'type',
-    'fuelType', 'transmission', 'mileage', 'price', 'condition',
-    'features', 'owner'
-  );
-  expect(vehicle.type).to.be.oneOf(['sedan', 'suv', 'truck', 'coupe', 'hatchback', 'van', 'wagon']);
-  expect(vehicle.fuelType).to.be.oneOf(['gasoline', 'diesel', 'electric', 'hybrid', 'plugin_hybrid']);
-  expect(vehicle.transmission).to.be.oneOf(['automatic', 'manual', 'cvt']);
-  expect(vehicle.condition).to.be.oneOf(['new', 'used', 'certified']);
 };
 
 // ============================================
@@ -480,31 +415,4 @@ export const expectValidLogEntry = (log) => {
   expect(log.level).to.be.oneOf(['debug', 'info', 'warn', 'error', 'fatal']);
   expect(log.environment).to.be.oneOf(['development', 'staging', 'production']);
   expect(log.method).to.be.oneOf(['GET', 'POST', 'PUT', 'PATCH', 'DELETE']);
-};
-
-// ============================================
-// HEALTHCARE & EDUCATION
-// ============================================
-
-export const expectValidMedicalRecord = (record) => {
-  expect(record).to.be.an('object');
-  expect(record).to.have.all.keys(
-    'id', 'patientId', 'patientName', 'dateOfBirth', 'bloodType',
-    'allergies', 'conditions', 'medications', 'visits', 'emergencyContact'
-  );
-  expect(record.bloodType).to.be.oneOf(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']);
-  expect(record.allergies).to.be.an('array');
-  expect(record.conditions).to.be.an('array');
-  expect(record.medications).to.be.an('array');
-};
-
-export const expectValidEducation = (education) => {
-  expect(education).to.be.an('object');
-  expect(education).to.have.all.keys(
-    'id', 'studentId', 'studentName', 'email', 'institution',
-    'degree', 'fieldOfStudy', 'gpa', 'startDate', 'endDate',
-    'courses', 'achievements', 'status'
-  );
-  expect(education.status).to.be.oneOf(['enrolled', 'graduated', 'withdrawn', 'on_leave']);
-  expect(education.gpa).to.be.a('number').and.to.be.within(0, 4);
 };
